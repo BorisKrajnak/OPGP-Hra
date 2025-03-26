@@ -1,2 +1,2 @@
 slovo = "test"
-print(test)
+print(slovo)
