@@ -1,1 +1,2 @@
-print("skuska")
+slovo = "test"
+print(test)
