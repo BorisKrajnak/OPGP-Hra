@@ -1,2 +1,2 @@
-slovo = "test"
+slovo = "testik"
 print(slovo)
