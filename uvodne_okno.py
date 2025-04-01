@@ -43,7 +43,7 @@ while running:
             print("Ukončujem hru")
             running = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE: # Ukončenie pomocou klavesy ESC
+            if event.key == pygame.K_ESCAPE: # Ukončenie pomocou klávesy ESC
                 print("Ukončujem hru")
                 running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
