@@ -40,7 +40,16 @@ running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            print("Ukončujem hru")
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE: # Ukončenie pomocou klavesy ESC
+                print("Ukončujem hru")
+                running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if quit_button_rect.collidepoint(event.pos): # Ukončenie pomocou tlačidla
+                print("Ukončujem hru")
+                running = False
 
 
     # Aktualizácia obrazovky
