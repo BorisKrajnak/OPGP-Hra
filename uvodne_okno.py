@@ -17,6 +17,22 @@ try:
 except Exception as e:
     print(f"Chyba pri načítaní obrázka: {e}")
 
+# Tlačidlo ukončiť
+button_width = 250
+button_height = 50
+border_radius = 20
+
+quit_button_rect = pygame.Rect(40, height - button_height - 40, button_width, button_height)
+button_color = (169,169,169) # Sivá
+pygame.draw.rect(screen, button_color, quit_button_rect, border_radius = border_radius)# Zaoblene rohy
+
+# Nastavenie fontu a bilej farby tetxu
+font = pygame.font.SysFont("Arial", 40, bold=True)
+quit_button_text = font.render("UKONČIŤ", True, (255,255,255))
+
+#Zarovnanie tlačidla na stred
+quit_button_text_rect = quit_button_text.get_rect(center = quit_button_rect.center)
+screen.blit(quit_button_text, quit_button_text_rect)
 
 
 # Hlavná slučka
@@ -25,6 +41,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
 
     # Aktualizácia obrazovky
     pygame.display.update()
