@@ -11,7 +11,7 @@ pygame.display.set_caption("Vesmírna hra")
 
 # Načítanie obrázka
 try:
-    background_img = pygame.image.load(r"pozadie_uvodne_okno.jpg")
+    background_img = pygame.image.load(r"img/pozadie_uvodne_okno.jpg")
     background_img = pygame.transform.scale(background_img, (int(background_img.get_width() * 0.8), int(background_img.get_height() * 0.8)))
     screen.blit(background_img, ((width - background_img.get_width()) // 2, (height - background_img.get_height()) // 4))
 except Exception as e:
