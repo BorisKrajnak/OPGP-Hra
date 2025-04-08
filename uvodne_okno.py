@@ -65,10 +65,11 @@ while running:
             if quit_button_rect.collidepoint(event.pos): # Ukončenie pomocou tlačidla
                 running = False
             if next_button_rect.collidepoint(event.pos): # Tlačidlo Next
-                subprocess.Popen(["python","nastavenia_hry.py"])
-                running = False
+                subprocess.run(["python","nastavenia_hry.py"])
                 pygame.quit()
                 sys.exit()
+
+
 
     # Aktualizácia obrazovky
     pygame.display.update()
