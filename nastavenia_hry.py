@@ -1,6 +1,6 @@
+import os
 import subprocess
 import sys
-
 import pygame
 
 # Inicializácia Pygame
@@ -9,12 +9,28 @@ pygame.init()
 # Nastavenie veľkosti okna na celú obrazovku
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 SCREEN_WIDTH, SCREEN_HEIGHT = screen.get_size()
+pygame.display.set_caption("Nastavenia hry")
 
 # Farby a Font
 WHITE = (255, 255, 255)
 DARK_GRAY = (169, 169, 169)
 SPACE_BLUE = (10, 10, 40)
 font = pygame.font.Font(None, 50)
+
+# Cesta k obrázkom
+MAPS_FOLDER = r"img/map_imagines"
+
+# Načítanie 12 obrázkov
+map_images = [
+    pygame.transform.scale(pygame.image.load(os.path.join(MAPS_FOLDER, f"pozadie_vesmir_n{i}.jpg")), (150, 90))
+    if os.path.exists(os.path.join(MAPS_FOLDER, f"pozadie_vesmir_n{i}.jpg"))
+    else pygame.Surface((150, 90)) for i in range(1, 13)
+]
+
+# Rozloženie máp
+map_positions = [
+    (SCREEN_WIDTH // 2 - 540 + (i % 6) * 180, SCREEN_HEIGHT // 2 - 240 + (i // 6) * 110) for i in range(12)
+]
 
 # Pozadie
 screen.fill(SPACE_BLUE)
@@ -36,15 +52,23 @@ exit_text = font.render("BACK", True, WHITE)
 screen.blit(start_text, start_text.get_rect(center=start_button.center))
 screen.blit(exit_text, exit_text.get_rect(center=back_button.center))
 
-# NADPIS
+# NADPIS NASTAVENIA HRY
 title_text = font.render("NASTAVENIA HRY", True, WHITE)
 screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, 50))
+
+#NADPIS VÝBER MAPY
+map_selection_text = font.render("VÝBER MAPY:", True, WHITE)
+screen.blit(map_selection_text, (SCREEN_WIDTH // 2 - map_selection_text.get_width() // 2, 110))
 
 
 
 # Hlavná Slučka
 running = True
 while running:
+    # Zobrazenie máp
+    for i, pos in enumerate(map_positions):
+        pygame.draw.rect(screen, WHITE, (pos[0] - 5, pos[1] - 5, 160, 100), 5)
+        screen.blit(map_images[i], pos)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -53,9 +77,10 @@ while running:
             pygame.quit()
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if back_button.collidepoint(event.pos):     #Naspať do hlavnej obrazovky
-                subprocess.run(["python","uvodne_okno.py"])
+            if back_button.collidepoint(event.pos): #Naspať do hlavnej obrazovky
+                running = False
                 pygame.quit()
+                subprocess.run(["python", "uvodne_okno.py"])
                 sys.exit()
             if start_button.collidepoint(event.pos):    #Tlačidlo na spustenie hry
                 pass

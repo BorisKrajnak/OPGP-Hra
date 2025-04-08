@@ -1,5 +1,4 @@
 import subprocess
-
 import pygame
 import sys
 
@@ -65,8 +64,9 @@ while running:
             if quit_button_rect.collidepoint(event.pos): # Ukončenie pomocou tlačidla
                 running = False
             if next_button_rect.collidepoint(event.pos): # Tlačidlo Next
-                subprocess.run(["python","nastavenia_hry.py"])
+                running = False
                 pygame.quit()
+                subprocess.run(["python","nastavenia_hry.py"])
                 sys.exit()
 
 
