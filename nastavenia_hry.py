@@ -116,10 +116,12 @@ while running:
                 pass
 
         if event.type == pygame.MOUSEBUTTONDOWN:
+            # Výber mapy
             for i, pos in enumerate(map_positions):
                 rect = pygame.Rect(pos[0], pos[1], 150, 90)
                 if rect.collidepoint(event.pos):
                     selected_map = i
+            #Výber raketky
             for i, pos in enumerate(control_positions):
                 rect = pygame.Rect(pos[0], pos[1], 160, 90)
                 if rect.collidepoint(event.pos):
