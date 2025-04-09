@@ -22,25 +22,18 @@ font = pygame.font.Font(None, 50)
 MAPS_FOLDER = r"img/map_imagines"
 CONTROLS_FOLDER = r"img/ovladanie"
 
-# Načítanie 12 obrázkov (máp)
+# Načítanie 12 obrázkov
 map_images = [
     pygame.transform.scale(pygame.image.load(os.path.join(MAPS_FOLDER, f"pozadie_vesmir_n{i}.jpg")), (150, 90))
     if os.path.exists(os.path.join(MAPS_FOLDER, f"pozadie_vesmir_n{i}.jpg"))
     else pygame.Surface((150, 90)) for i in range(1, 13)
 ]
-
 # Načítanie obrázkov raketiek
 control_images = [
     pygame.transform.scale(pygame.image.load(os.path.join(CONTROLS_FOLDER, f"ovladanie{i + 1}.png")), (160, 90))
     if os.path.exists(os.path.join(CONTROLS_FOLDER, f"ovladanie{i + 1}.png"))
     else pygame.Surface((160, 90)) for i in range(3)
 ]
-
-# Rozloženie máp
-map_positions = [
-    (SCREEN_WIDTH // 2 - 540 + (i % 6) * 180, SCREEN_HEIGHT // 2 - 240 + (i // 6) * 110) for i in range(12)
-]
-
 # Rozloženie raketiek
 control_positions = [
     (SCREEN_WIDTH // 2 - 280, SCREEN_HEIGHT // 2 + 120),
@@ -48,8 +41,17 @@ control_positions = [
     (SCREEN_WIDTH // 2 + 120, SCREEN_HEIGHT // 2 + 120)
 ]
 
+# Výber raketky
+control_selection_text = font.render("VÝBER RAKETKY:", True, WHITE)
+screen.blit(control_selection_text, (SCREEN_WIDTH // 2 - control_selection_text.get_width() // 2, SCREEN_HEIGHT // 2 + 70))
+
 selected_map = None
 selected_control = None
+
+# Rozloženie máp
+map_positions = [
+    (SCREEN_WIDTH // 2 - 540 + (i % 6) * 180, SCREEN_HEIGHT // 2 - 240 + (i // 6) * 110) for i in range(12)
+]
 
 # Pozadie
 screen.fill(SPACE_BLUE)
@@ -79,26 +81,20 @@ screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, 50))
 map_selection_text = font.render("VÝBER MAPY:", True, WHITE)
 screen.blit(map_selection_text, (SCREEN_WIDTH // 2 - map_selection_text.get_width() // 2, 110))
 
-# Výber raketky
-control_selection_text = font.render("VÝBER RAKETKY:", True, WHITE)
-screen.blit(control_selection_text, (SCREEN_WIDTH // 2 - control_selection_text.get_width() // 2, SCREEN_HEIGHT // 2 + 70))
 
-# Hlavný cyklus
+
+# Hlavná Slučka
 running = True
 while running:
-    #Zobrazenie máp
+    # Zobrazenie máp
     for i, pos in enumerate(map_positions):
-        color = YELLOW if selected_map == i else WHITE
-        pygame.draw.rect(screen, color, (pos[0] - 5, pos[1] - 5, 160, 100), 5)
+        pygame.draw.rect(screen, WHITE, (pos[0] - 5, pos[1] - 5, 160, 100), 5)
         screen.blit(map_images[i], pos)
-
-    # Zobrazenie raketiek
     for i, pos in enumerate(control_positions):
         color = YELLOW if selected_control == i else WHITE
         pygame.draw.rect(screen, color, (pos[0] - 5, pos[1] - 5, 170, 100), 5)
         screen.blit(control_images[i], pos)
 
-    #Udalosti
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -107,14 +103,13 @@ while running:
             pygame.quit()
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if back_button.collidepoint(event.pos):  # Naspať do hlavnej obrazovky
+            if back_button.collidepoint(event.pos): #Naspať do hlavnej obrazovky
                 running = False
                 pygame.quit()
                 subprocess.run(["python", "uvodne_okno.py"])
                 sys.exit()
-            if start_button.collidepoint(event.pos):  # Tlačidlo na spustenie hry
+            if start_button.collidepoint(event.pos):    #Tlačidlo na spustenie hry
                 pass
-
         if event.type == pygame.MOUSEBUTTONDOWN:
             for i, pos in enumerate(map_positions):
                 rect = pygame.Rect(pos[0], pos[1], 150, 90)
@@ -124,9 +119,8 @@ while running:
                 rect = pygame.Rect(pos[0], pos[1], 160, 90)
                 if rect.collidepoint(event.pos):
                     selected_control = i
-
-    #Aktualizácia obrazovky
-    pygame.display.flip()
+    # Aktualizácia obrazovky
+    pygame.display.update()
 
 pygame.quit()
 sys.exit()
