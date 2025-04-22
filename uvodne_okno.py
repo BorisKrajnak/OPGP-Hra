@@ -109,11 +109,7 @@ while running:
             running = False  # Ukončí hru, ak sa zavrie okno
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                if showing_rules:
-                    showing_rules = False
-                else:
-                    running = False
-
+                running = False  # Ukončí hru, ak sa stlačí ESC
         if event.type == pygame.MOUSEBUTTONDOWN:
             if quit_button_rect.collidepoint(event.pos):  # Ak klikneš na "QUIT"
                 running = False
