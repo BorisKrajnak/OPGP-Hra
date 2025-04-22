@@ -110,9 +110,9 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 if showing_rules:
-                    showing_rules = False
+                    showing_rules = False # Zatvorenie pravidiel pomocou ESC
                 else:
-                    running = False # Zatvorenie pravidiel pomocou ESC
+                    running = False # Ukončí hru, ak sa stlačí ESC
         if event.type == pygame.MOUSEBUTTONDOWN:
             if quit_button_rect.collidepoint(event.pos):  # Ak klikneš na "QUIT"
                 running = False
