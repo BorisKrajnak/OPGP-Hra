@@ -12,7 +12,7 @@ width, height = info.current_w, info.current_h
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Hra - UFO")
 
-# Načítanie pozadia a obrázka prostreidku cez import
+# Načítanie pozadia cez import
 background = nacitaj_pozadie("game_config.json",width,height)
 control_image, control_rect = nacitaj_obrazok("img/ovladanie/ovladanie2.png", width // 2, height // 2)
 
