@@ -19,7 +19,7 @@ control_image, control_rect = nacitaj_obrazok("img/ovladanie/ovladanie2.png", wi
 # Hlavný cyklus
 running = True
 while running:
-    screen.blit(background, (0, 0))
+    screen.blit(background, (0,0))
     # Vykreslenie obrázka do stredu obrazovky
     screen.blit(control_image, control_rect)
 
