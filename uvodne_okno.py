@@ -16,7 +16,16 @@ pygame.display.set_caption("Space Rider")  # Názov okna
 WHITE = (255, 255, 255)
 SPACE_BLUE = (10, 10, 40)
 DARK_GRAY = (169, 169, 169)
-PURPLE = (10, 10, 40)
+PURPLE = (31, 10, 30)
+
+def draw_vertical_gradient(surface, top_color, bottom_color):
+    for y in range(surface.get_height()):
+        ratio = y / surface.get_height()
+        r = int(top_color[0] * (1 - ratio) + bottom_color[0] * ratio)
+        g = int(top_color[1] * (1 - ratio) + bottom_color[1] * ratio)
+        b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
+        pygame.draw.line(surface, (r, g, b), (0, y), (surface.get_width(), y))
+
 
 # Načítanie vlastného fontu pre nadpis (názov hry)
 font_path = "Font/VOYAGER.ttf"  # cesta k fontu
@@ -29,7 +38,7 @@ small_font = pygame.font.SysFont("Arial", 28)
 loading_font = pygame.font.Font(font_path, 200)
 
 #Welcome
-screen.fill(SPACE_BLUE)
+draw_vertical_gradient(screen, SPACE_BLUE, PURPLE)
 welcome_text = loading_font.render("WELCOME", True, WHITE)
 screen.blit(welcome_text, (
     width // 2 - welcome_text.get_width() // 2,

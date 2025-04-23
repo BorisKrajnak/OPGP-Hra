@@ -19,6 +19,15 @@ WHITE = (255, 255, 255)
 DARK_GRAY = (169, 169, 169)
 SPACE_BLUE = (10, 10, 40)
 YELLOW = (255, 255, 0)
+PURPLE = (31, 10, 30)
+
+def draw_vertical_gradient(surface, top_color, bottom_color):
+    for y in range(surface.get_height()):
+        ratio = y / surface.get_height()
+        r = int(top_color[0] * (1 - ratio) + bottom_color[0] * ratio)
+        g = int(top_color[1] * (1 - ratio) + bottom_color[1] * ratio)
+        b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
+        pygame.draw.line(surface, (r, g, b), (0, y), (surface.get_width(), y))
 
 # Fonty
 font_path = "Font/VOYAGER.ttf"  # cesta k fontu
@@ -26,7 +35,7 @@ loading_font = pygame.font.Font(font_path, 200)
 font = pygame.font.Font(None, 50)
 
 # Settings
-screen.fill(SPACE_BLUE)
+draw_vertical_gradient(screen, SPACE_BLUE, PURPLE)
 loading_text = loading_font.render("LOADING", True, WHITE)
 screen.blit(loading_text, (
     width // 2 - loading_text.get_width() // 2,
