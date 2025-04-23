@@ -102,7 +102,7 @@ def start_game(selected_control, selected_map):
 # Hlavný cyklus
 running = True
 while running:
-    screen.fill(SPACE_BLUE)
+    draw_vertical_gradient(screen, SPACE_BLUE, PURPLE)
 
     # Tlačidlá
     pygame.draw.rect(screen, DARK_GRAY, start_button, border_radius=border_radius)
