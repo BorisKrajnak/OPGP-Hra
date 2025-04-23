@@ -86,7 +86,7 @@ def start_game(selected_control, selected_map):
     script_to_run = script_map.get(selected_control)
     if script_to_run:
         subprocess.Popen(["python", script_to_run], creationflags=subprocess.CREATE_NO_WINDOW)
-        time.sleep(0.5)
+        time.sleep(1)
         pygame.quit()
         sys.exit()
 
