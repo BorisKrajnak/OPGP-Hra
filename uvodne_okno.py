@@ -66,7 +66,7 @@ next_button_text_rect = next_button_text.get_rect(center=next_button_rect.center
 rules_button_text_rect = rules_button_text.get_rect(center=rules_button_rect.center)
 
 # Nadpis (názov hry) s vlastným fontom
-title_text = title_font.render("SPACE         RIDER", True, WHITE)
+title_text = title_font.render("SPACE     RIDER", True, WHITE)
 
 # Premenná na sledovanie, či sú pravidlá zobrazené
 showing_rules = False
