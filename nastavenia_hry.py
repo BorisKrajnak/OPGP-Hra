@@ -21,13 +21,17 @@ SPACE_BLUE = (10, 10, 40)
 YELLOW = (255, 255, 0)
 
 # Fonty
-loading_font = pygame.font.SysFont("Arial", 60)
+font_path = "Font/VOYAGER.ttf"  # cesta k fontu
+loading_font = pygame.font.Font(font_path, 200)
 font = pygame.font.Font(None, 50)
 
 # Settings
 screen.fill(SPACE_BLUE)
-loading_text = loading_font.render("Settings...", True, WHITE)
-screen.blit(loading_text, (width // 2 - loading_text.get_width() // 2, height // 2))
+loading_text = loading_font.render("LOADING", True, WHITE)
+screen.blit(loading_text, (
+    width // 2 - loading_text.get_width() // 2,
+    height // 2 - loading_text.get_height() // 2
+))
 pygame.display.flip()
 
 # Cesta k obrázkom

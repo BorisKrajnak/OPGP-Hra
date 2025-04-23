@@ -26,12 +26,15 @@ title_font = pygame.font.Font(font_path, font_size)  # Tento font sa použije ib
 # Pôvodný font pre ostatné texty
 font = pygame.font.SysFont("Arial", 40, bold=True)
 small_font = pygame.font.SysFont("Arial", 28)
-loading_font = pygame.font.SysFont("Arial", 60)
+loading_font = pygame.font.Font(font_path, 200)
 
 #Welcome
 screen.fill(SPACE_BLUE)
-welcome_text = loading_font.render("Welcome...", True, WHITE)
-screen.blit(welcome_text, (width // 2 - welcome_text.get_width() // 2, height // 2))
+welcome_text = loading_font.render("WELCOME", True, WHITE)
+screen.blit(welcome_text, (
+    width // 2 - welcome_text.get_width() // 2,
+    height // 2 - welcome_text.get_height() // 2
+))
 pygame.display.update()
 time.sleep(0.5)
 
