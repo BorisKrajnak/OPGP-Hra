@@ -29,6 +29,29 @@ def draw_vertical_gradient(surface, top_color, bottom_color):
         b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
         pygame.draw.line(surface, (r, g, b), (0, y), (surface.get_width(), y))
 
+
+def draw_gradient_button(surface, rect, color1, color2, text, font, text_color):
+    button_surf = pygame.Surface((rect.width, rect.height))
+    for y in range(rect.height):
+        ratio = y / rect.height
+        r = int(color1[0] * (1 - ratio) + color2[0] * ratio)
+        g = int(color1[1] * (1 - ratio) + color2[1] * ratio)
+        b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
+        pygame.draw.line(button_surf, (r, g, b), (0, y), (rect.width, y))
+    button_surf.set_colorkey((0, 0, 0))  # pre transparentné rohy, ak chceš
+
+    # Rounded corners
+    rounded_surf = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+    pygame.draw.rect(rounded_surf, (255, 255, 255, 255), (0, 0, rect.width, rect.height), border_radius=20)
+    button_surf.blit(rounded_surf, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
+
+    surface.blit(button_surf, (rect.x, rect.y))
+
+    text_surf = font.render(text, True, text_color)
+    text_rect = text_surf.get_rect(center=rect.center)
+    surface.blit(text_surf, text_rect)
+
+
 # Fonty
 font_path = "Font/VOYAGER.ttf"  # cesta k fontu
 loading_font = pygame.font.Font(font_path, 200)
@@ -107,8 +130,8 @@ while running:
     # Tlačidlá
     pygame.draw.rect(screen, DARK_GRAY, start_button, border_radius=border_radius)
     pygame.draw.rect(screen, DARK_GRAY, back_button, border_radius=border_radius)
-    screen.blit(font.render("START", True, WHITE), font.render("START", True, WHITE).get_rect(center=start_button.center))
-    screen.blit(font.render("BACK", True, WHITE), font.render("BACK", True, WHITE).get_rect(center=back_button.center))
+    draw_gradient_button(screen, start_button,SPACE_BLUE, PURPLE, "START", font, WHITE)
+    draw_gradient_button(screen, back_button,SPACE_BLUE, PURPLE, "BACK", font, WHITE)
 
     # Nadpisy
     screen.blit(font.render("NASTAVENIA HRY", True, WHITE), (width // 2 - 160, 50))

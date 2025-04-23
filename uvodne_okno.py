@@ -58,11 +58,11 @@ except Exception as e:
 
 # Parametre pre tlačidlá
 button_width = 250
-button_height = 50
-border_radius = 20
+button_height = 75
+border_radius = 7
 
 # Nastavenie pozície tlačidiel
-padding = 40
+padding = 150
 quit_button_rect = pygame.Rect(padding, height - button_height - padding, button_width, button_height)
 rules_button_rect = pygame.Rect((width - button_width) // 2, height - button_height - padding, button_width, button_height)
 next_button_rect = pygame.Rect(width - button_width - padding, height - button_height - padding, button_width, button_height)
@@ -171,9 +171,9 @@ while running:
         screen.fill((0, 0, 0))  # Ak nie, vyplní obrazovku čiernou farbou
 
     # Vykreslenie tlačidiel na obrazovke
-    pygame.draw.rect(screen, DARK_GRAY, quit_button_rect, border_radius=border_radius)
-    pygame.draw.rect(screen, DARK_GRAY, next_button_rect, border_radius=border_radius)
-    pygame.draw.rect(screen, DARK_GRAY, rules_button_rect, border_radius=border_radius)
+    draw_vertical_gradient(screen, quit_button_rect, SPACE_BLUE, PURPLE, border_radius)
+    draw_vertical_gradient(screen, next_button_rect, SPACE_BLUE, PURPLE, border_radius)
+    draw_vertical_gradient(screen, rules_button_rect, SPACE_BLUE, PURPLE, border_radius)
 
     # Zobrazenie textu na tlačidlách
     screen.blit(quit_button_text, quit_button_text_rect)
