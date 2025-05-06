@@ -102,7 +102,7 @@ def draw_vertical_gradient(surface, rect, top_color, bottom_color, border_radius
 
 def draw_rules_popup():
     # Veľkosť a pozícia popupu
-    popup_width, popup_height = 800, 600
+    popup_width, popup_height = 800, 500
     popup_rect = pygame.Rect((width - popup_width) // 2, (height - popup_height) // 2, popup_width, popup_height)
 
     # Gradient pozadie (tmavo fialová → tmavomodrá)
@@ -130,7 +130,7 @@ def draw_rules_popup():
 
     # Výpočet vertikálneho zarovnania pre pravidlá
     total_text_height = len(rules_lines) * 40  # výška všetkých riadkov
-    start_y = popup_rect.top + (popup_rect.height - total_text_height) // 2  # začiatok v vertikálnom strede
+    start_y = popup_rect.top + (popup_rect.height - total_text_height) // 1.25  # začiatok v vertikálnom strede
 
     # Vykreslenie textu pravidiel do stredu
     for i, line in enumerate(rules_lines):
