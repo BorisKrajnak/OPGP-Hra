@@ -130,7 +130,7 @@ def draw_rules_popup():
 
     # Výpočet vertikálneho zarovnania pre pravidlá
     total_text_height = len(rules_lines) * 40  # výška všetkých riadkov
-    start_y = popup_rect.top + (popup_rect.height - total_text_height) // 1.25  # začiatok v vertikálnom strede
+    start_y = popup_rect.top + (popup_rect.height - total_text_height) // 1.5  # začiatok v vertikálnom strede
 
     # Vykreslenie textu pravidiel do stredu
     for i, line in enumerate(rules_lines):
