@@ -97,10 +97,19 @@ for i in range(1, 13):
 
 # Načítanie obrázkov raketiek
 control_images = [
-    pygame.transform.scale(pygame.image.load(os.path.join(CONTROLS_FOLDER, f"ovladanie{i + 1}.png")), (160, 90))
-    if os.path.exists(os.path.join(CONTROLS_FOLDER, f"ovladanie{i + 1}.png"))
-    else pygame.Surface((160, 90)) for i in range(3)
+    pygame.transform.scale(pygame.image.load(os.path.join(CONTROLS_FOLDER, f"ovladanie1.png")), (160, 90))
+    if os.path.exists(os.path.join(CONTROLS_FOLDER, f"ovladanie1.png"))
+    else pygame.Surface((160, 90)),
+
+    pygame.transform.scale(pygame.image.load(os.path.join(CONTROLS_FOLDER, f"ovladanie2.png")), (160, 90))
+    if os.path.exists(os.path.join(CONTROLS_FOLDER, f"ovladanie2.png"))
+    else pygame.Surface((160, 90)),
+
+    pygame.transform.scale(pygame.image.load(os.path.join(CONTROLS_FOLDER, f"ovladanie4.png")), (160, 90))  # <-- tu zmena
+    if os.path.exists(os.path.join(CONTROLS_FOLDER, f"ovladanie4.png"))
+    else pygame.Surface((160, 90))
 ]
+
 
 # Rozloženie máp a ovládania
 map_positions = [
