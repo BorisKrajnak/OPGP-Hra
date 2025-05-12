@@ -130,11 +130,12 @@ def spusti_hru():
 
             offset = (int(meteor.x - frame_rect.left), int(meteor.y - frame_rect.top))
             if player_mask.overlap(meteor.mask, offset):
-                # Po náraze raketky spusti `game_over.py`
-                subprocess.Popen(["python", "game_over.py"], creationflags=subprocess.CREATE_NO_WINDOW)
+                subprocess.Popen(["python", "game_over.py"],creationflags=subprocess.CREATE_NO_WINDOW)  # Toto potlačí okno príkazového riadku
                 time.sleep(0.5)
+                running = False
                 pygame.quit()
                 sys.exit()
+
             meteor.draw(screen)
 
         # Kreslenie raketky
@@ -146,5 +147,3 @@ def spusti_hru():
 if __name__ == "__main__":
     spusti_hru()
 
-pygame.quit()
-sys.exit()
