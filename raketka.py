@@ -1,3 +1,4 @@
+import json
 import pygame
 import sys
 import os
@@ -6,6 +7,27 @@ import subprocess
 import time
 
 from vyber_pozadia import nacitaj_pozadie
+
+
+# Funkcia na uloženie aktívnej hry do JSON
+def save_game_config(game_name):
+    # Skontroluj, či súbor existuje
+    if not os.path.exists("game_config.json"):
+        # Ak neexistuje, vytvor nový súbor s default hodnotou
+        config = {"active_game": game_name}
+        with open("game_config.json", "w") as f:
+            json.dump(config, f, indent=4)
+    else:
+        # Ak súbor existuje, načítaj aktuálne nastavenia a uprav hodnotu
+        with open("game_config.json", "r") as f:
+            config = json.load(f)
+
+        config["active_game"] = game_name  # Uprav hodnotu aktívnej hry
+
+        # Ulož upravený config späť do súboru
+        with open("game_config.json", "w") as f:
+            json.dump(config, f, indent=4)
+
 
 # Inicializácia Pygame
 pygame.init()
@@ -18,11 +40,10 @@ pygame.display.set_caption("Raketka")
 clock = pygame.time.Clock()
 
 # Načítanie pozadia
-background = nacitaj_pozadie("game_config.json",width,height)
+background = nacitaj_pozadie("game_config.json", width, height)
 
 # Parametre raketky
 player_width, player_height = 120, 120
-
 player_speed = 10
 
 # Načítanie snímkov animácie
@@ -38,7 +59,6 @@ for filename in sorted(os.listdir(gif_folder)):
     frame = pygame.transform.scale(frame, (player_width, player_height))
     frame = pygame.transform.rotate(frame, -45)
     player_frames.append(frame)
-
 
 # Načítanie obrázka meteoritu
 meteor_image = pygame.image.load(os.path.join("img", "prekazky", "meteor.png")).convert_alpha()
@@ -76,6 +96,7 @@ def spusti_hru():
     spawn_delay = 1200
     last_spawn_time = pygame.time.get_ticks()
     running = True
+
     # Hlavný cyklus
     while running:
         screen.blit(background, (0, 0))
@@ -130,7 +151,8 @@ def spusti_hru():
 
             offset = (int(meteor.x - frame_rect.left), int(meteor.y - frame_rect.top))
             if player_mask.overlap(meteor.mask, offset):
-                subprocess.Popen(["python", "game_over.py"],creationflags=subprocess.CREATE_NO_WINDOW)  # Toto potlačí okno príkazového riadku
+                subprocess.Popen(["python", "game_over.py"],
+                                 creationflags=subprocess.CREATE_NO_WINDOW)  # Toto potlačí okno príkazového riadku
                 time.sleep(0.5)
                 running = False
                 pygame.quit()
@@ -145,5 +167,5 @@ def spusti_hru():
         pygame.time.Clock().tick(60)
 
 if __name__ == "__main__":
+    save_game_config("raketka")
     spusti_hru()
-

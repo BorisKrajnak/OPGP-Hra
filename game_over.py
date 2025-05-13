@@ -1,7 +1,18 @@
+import json
 import pygame
 import subprocess
 import sys
 import time
+
+
+# Funkcia na načítanie aktívnej hry z JSON
+def load_game_config():
+    try:
+        with open("game_config.json", "r") as f:
+            config = json.load(f)
+            return config.get("active_game", "unknown")
+    except FileNotFoundError:
+        return "unknown"
 
 pygame.init()
 info = pygame.display.Info()
@@ -15,7 +26,7 @@ SPACE_BLUE = (10, 10, 40)
 DARK_GRAY = (169, 169, 169)
 PURPLE = (31, 10, 30)
 
-#Funkcia na gradiet
+# Funkcia na gradiet
 def draw_vertical_gradient(surface, top_color, bottom_color):
     for y in range(surface.get_height()):
         ratio = y / surface.get_height()
@@ -30,6 +41,9 @@ font = pygame.font.Font(font_path, 80)
 button_font = pygame.font.Font(font_path, 50)
 loading_font = pygame.font.Font(font_path, 200)
 
+# Načítanie aktívnej hry
+active_game = load_game_config()
+
 # YOU LOSE
 draw_vertical_gradient(screen, SPACE_BLUE, PURPLE)
 welcome_text = loading_font.render("YOU LOSE", True, WHITE)
@@ -40,7 +54,7 @@ screen.blit(welcome_text, (
 pygame.display.update()
 time.sleep(0.5)
 
-#Funkcia na gradiet button
+# Funkcia na gradient button
 def draw_gradient_button(rect, color1, color2, text):
     button_surf = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
     for y in range(rect.height):
@@ -81,10 +95,11 @@ while running:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if restart_button.collidepoint(event.pos):
-                subprocess.Popen(["python", "raketka.py"], creationflags=subprocess.CREATE_NO_WINDOW)
-                time.sleep(0.5)
-                pygame.quit()
-                sys.exit()
+                if active_game != "unknown":
+                    subprocess.Popen(["python", f"{active_game}.py"], creationflags=subprocess.CREATE_NO_WINDOW)
+                    time.sleep(0.5)
+                    pygame.quit()
+                    sys.exit()
             if quit_button.collidepoint(event.pos):
                 pygame.quit()
                 sys.exit()
@@ -99,10 +114,11 @@ while running:
                 pygame.quit()
                 sys.exit()
             if event.key == pygame.K_r:
-                subprocess.Popen(["python", "raketka.py"], creationflags=subprocess.CREATE_NO_WINDOW)
-                time.sleep(0.5)
-                pygame.quit()
-                sys.exit()
+                if active_game != "unknown":
+                    subprocess.Popen(["python", f"{active_game}.py"], creationflags=subprocess.CREATE_NO_WINDOW)
+                    time.sleep(0.5)
+                    pygame.quit()
+                    sys.exit()
 
     pygame.display.flip()
 
