@@ -97,9 +97,53 @@ def spusti_hru():
     last_spawn_time = pygame.time.get_ticks()
     running = True
 
+    start_time = pygame.time.get_ticks()
+
+    font_path = "Font/VOYAGER.ttf"
+    font = pygame.font.Font(font_path, 50)
+
+    base_speed = 3.0
+    max_speed = 12.0
+    min_spawn_delay = 400
+    meteory_velkost_min = 40
+    meteory_velkost_max = 100
+    meteory_obehol = 0
+
+    fuel = 100
+    fuel_depletion_rate = 0.05
+    fuel_bar_position = (20, 120)
+    fuel_bar_size = (300, 25)
+
+    fuel_spawn_time = 0
+    fuel_duration = 5000
+    fuel_pos = None
+    fuel_size = 60
+
+    fuel_image = pygame.image.load(os.path.join("img", "palivo", "fuel.png")).convert_alpha()
+    fuel_image = pygame.transform.scale(fuel_image, (fuel_size, fuel_size))
+    fuel_mask = pygame.mask.from_surface(fuel_image)
+
+    def spawn_fuel():
+        x = random.randint(fuel_size, width - fuel_size)
+        y = random.randint(fuel_size, height - fuel_size)
+        return (x, y)
+
     # Hlavný cyklus
     while running:
         screen.blit(background, (0, 0))
+
+        elapsed_time = (pygame.time.get_ticks() - start_time) // 1000
+        score = meteory_obehol + elapsed_time
+
+        score_surface = font.render(f"SCORE: {score}", True, (255, 255, 255))
+        time_surface = font.render(f"TIME: {elapsed_time}s", True, (255, 255, 255))
+        screen.blit(score_surface, (20, 20))
+        screen.blit(time_surface, (20, 70))
+
+        if elapsed_time % 5 == 0:
+            base_speed = min(base_speed + 0.1, max_speed)
+            spawn_delay = max(spawn_delay - 10, min_spawn_delay)
+            meteory_velkost_max = min(meteory_velkost_max + 1, 160)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
@@ -135,22 +179,65 @@ def spusti_hru():
 
         # Spawn meteorov
         if pygame.time.get_ticks() - last_spawn_time > spawn_delay:
-            meteory.append(Meteor())
+            meteorit = Meteor()
+            meteorit.size = random.randint(meteory_velkost_min, meteory_velkost_max)
+            meteorit.image = pygame.transform.scale(meteor_image, (meteorit.size, meteorit.size))
+            meteorit.x = width + meteorit.size
+            meteorit.y = random.randint(0, height - meteorit.size)
+            meteorit.speed = random.uniform(base_speed, base_speed + 5.0)
+            meteorit.rect = pygame.Rect(meteorit.x, meteorit.y, meteorit.size, meteorit.size)
+            meteorit.mask = pygame.mask.from_surface(meteorit.image)
+            meteory.append(meteorit)
             last_spawn_time = pygame.time.get_ticks()
+
 
         # Kreslenie scény
         rotated_frame = pygame.transform.rotate(player_frames[current_frame], rotation_angle)
         frame_rect = rotated_frame.get_rect(center=(player_x, player_y))
         player_mask = pygame.mask.from_surface(rotated_frame)
 
+        # --- Fuel mechanics ---
+        fuel -= fuel_depletion_rate
+        fuel = max(fuel, 0)
+        if fuel == 0:
+            final_score = meteory_obehol + elapsed_time
+            with open("skore.json", "w") as f:
+                json.dump({"skore": final_score, "cas": elapsed_time}, f)
+            subprocess.Popen(["python", "game_over.py"], creationflags=subprocess.CREATE_NO_WINDOW)
+            time.sleep(0.5)
+            running = False
+            pygame.quit()
+            sys.exit()
+
+        current_time = pygame.time.get_ticks()
+        if fuel_pos is None and current_time - fuel_spawn_time > 15000:
+            fuel_pos = spawn_fuel()
+            fuel_spawn_time = current_time
+        elif fuel_pos is not None and current_time - fuel_spawn_time > fuel_duration:
+            fuel_pos = None
+
+        # Zobraz palivo a kontroluj kolíziu podľa masky (presný hitbox)
+        if fuel_pos is not None:
+            screen.blit(fuel_image, fuel_pos)
+            fuel_rect = pygame.Rect(fuel_pos[0], fuel_pos[1], fuel_size, fuel_size)
+            offset = (fuel_rect.left - frame_rect.left, fuel_rect.top - frame_rect.top)
+            if player_mask.overlap(fuel_mask, offset):
+                fuel = min(fuel + 30, 100)
+                fuel_pos = None
+
         for meteor in meteory[:]:
             meteor.update()
             if meteor.is_off_screen():
                 meteory.remove(meteor)
+                meteory_obehol += 1
                 continue
 
             offset = (int(meteor.x - frame_rect.left), int(meteor.y - frame_rect.top))
             if player_mask.overlap(meteor.mask, offset):
+                final_score = meteory_obehol + elapsed_time
+                with open("skore.json", "w") as f:
+                    json.dump({"skore": final_score, "cas": elapsed_time}, f)
+
                 subprocess.Popen(["python", "game_over.py"],
                                  creationflags=subprocess.CREATE_NO_WINDOW)  # Toto potlačí okno príkazového riadku
                 time.sleep(0.5)
@@ -162,6 +249,20 @@ def spusti_hru():
 
         # Kreslenie raketky
         screen.blit(rotated_frame, frame_rect.topleft)
+
+        # Draw fuel bar
+        if fuel > 60:
+            fuel_color = (0, 255, 0)
+        elif fuel > 30:
+            fuel_color = (255, 165, 0)
+        else:
+            fuel_color = (255, 0, 0)
+
+        pygame.draw.rect(screen, (50, 50, 50), (*fuel_bar_position, *fuel_bar_size))
+        filled_width = int(fuel_bar_size[0] * (fuel / 100))
+        pygame.draw.rect(screen, fuel_color,
+                         (fuel_bar_position[0], fuel_bar_position[1], filled_width, fuel_bar_size[1]))
+        pygame.draw.rect(screen, (255, 255, 255), (*fuel_bar_position, *fuel_bar_size), 2)
 
         pygame.display.flip()
         pygame.time.Clock().tick(60)

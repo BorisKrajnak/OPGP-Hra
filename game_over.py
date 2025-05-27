@@ -14,6 +14,22 @@ def load_game_config():
     except FileNotFoundError:
         return "unknown"
 
+def load_score():
+    try:
+        with open("skore.json", "r") as f:
+            data = json.load(f)
+            return data.get("skore", 0)
+    except:
+        return 0
+
+def load_time():
+    try:
+        with open("skore.json", "r") as f:
+            data = json.load(f)
+            return data.get("cas", 0)
+    except:
+        return 0
+
 pygame.init()
 info = pygame.display.Info()
 width, height = info.current_w, info.current_h
@@ -43,6 +59,8 @@ loading_font = pygame.font.Font(font_path, 200)
 
 # Načítanie aktívnej hry
 active_game = load_game_config()
+score = load_score()
+cas = load_time()
 
 # YOU LOSE
 draw_vertical_gradient(screen, SPACE_BLUE, PURPLE)
@@ -75,9 +93,17 @@ running = True
 while running:
     draw_vertical_gradient(screen, SPACE_BLUE, PURPLE)
 
+    base_y = height // 3 - 100
     # Nadpis
     game_over_text = font.render("GAME OVER", True, WHITE)
-    screen.blit(game_over_text, game_over_text.get_rect(center=(width // 2, height // 3)))
+    screen.blit(game_over_text, game_over_text.get_rect(center=(width // 2, base_y)))
+
+
+    score_text = font.render(f"SCORE: {score}", True, WHITE)
+    screen.blit(score_text, score_text.get_rect(center=(width // 2, base_y + 100)))
+
+    cas_text = font.render(f"TIME: {cas} s", True, WHITE)
+    screen.blit(cas_text, cas_text.get_rect(center=(width // 2, base_y + 180)))
 
     # Tlačidlá
     btn_width, btn_height = 300, 70
