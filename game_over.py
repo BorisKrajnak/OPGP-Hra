@@ -3,6 +3,7 @@ import pygame
 import subprocess
 import sys
 import time
+import os
 
 
 # Funkcia na načítanie aktívnej hry z JSON
@@ -21,6 +22,16 @@ def load_score():
             return data.get("skore", 0)
     except:
         return 0
+
+def nacitaj_best_score():
+    try:
+        with open("best_score_raketka.json", "r") as f:
+            data = json.load(f)
+            return data.get("best", 0)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return 0
+
+best_score = nacitaj_best_score()
 
 def load_time():
     try:
@@ -98,6 +109,8 @@ while running:
     game_over_text = font.render("GAME OVER", True, WHITE)
     screen.blit(game_over_text, game_over_text.get_rect(center=(width // 2, base_y)))
 
+    best_score_text = button_font.render(f"BEST SCORE RAKETKA: {best_score}", True, WHITE)
+    screen.blit(best_score_text, (10, 10))
 
     score_text = font.render(f"SCORE: {score}", True, WHITE)
     screen.blit(score_text, score_text.get_rect(center=(width // 2, base_y + 100)))

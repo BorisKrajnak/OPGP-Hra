@@ -29,6 +29,19 @@ def save_game_config(game_name):
             json.dump(config, f, indent=4)
 
 
+def uloz_best_score(score):
+    try:
+        with open("best_score_raketka.json", "r") as f:
+            data = json.load(f)
+            best = data.get("best", 0)
+    except (FileNotFoundError, json.JSONDecodeError):
+        best = 0
+
+    if score > best:
+        with open("best_score_raketka.json", "w") as f:
+            json.dump({"best": score}, f)
+
+
 # Inicializácia Pygame
 pygame.init()
 
@@ -203,6 +216,7 @@ def spusti_hru():
             final_score = meteory_obehol + elapsed_time
             with open("skore.json", "w") as f:
                 json.dump({"skore": final_score, "cas": elapsed_time}, f)
+            uloz_best_score(score)
             subprocess.Popen(["python", "game_over.py"], creationflags=subprocess.CREATE_NO_WINDOW)
             time.sleep(0.5)
             running = False
@@ -238,6 +252,7 @@ def spusti_hru():
                 with open("skore.json", "w") as f:
                     json.dump({"skore": final_score, "cas": elapsed_time}, f)
 
+                uloz_best_score(score)
                 subprocess.Popen(["python", "game_over.py"],
                                  creationflags=subprocess.CREATE_NO_WINDOW)  # Toto potlačí okno príkazového riadku
                 time.sleep(0.5)
