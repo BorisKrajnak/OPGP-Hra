@@ -8,6 +8,9 @@ import json
 # Inicializácia Pygame
 pygame.init()
 
+from music_manager import start_music
+start_music()
+
 # Nastavenie veľkosti okna na celú obrazovku
 info = pygame.display.Info()
 width, height = info.current_w, info.current_h

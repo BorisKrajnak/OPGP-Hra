@@ -5,6 +5,11 @@ import time
 
 # Inicializácia Pygame
 pygame.init()
+icon = pygame.image.load("favicon.png")
+pygame.display.set_icon(icon)
+
+from music_manager import start_music
+start_music()
 
 # Nastavenie veľkosti okna na celú obrazovku
 info = pygame.display.Info()

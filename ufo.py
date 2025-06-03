@@ -9,6 +9,9 @@ import time
 
 from vyber_pozadia import nacitaj_pozadie
 
+from music_manager import start_music
+start_music()
+
 # --- Funkcie na uloženie konfigurácie a skóre ---
 
 # Uloží názov aktuálne aktívnej hry do konfiguračného súboru

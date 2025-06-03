@@ -9,6 +9,10 @@ import time
 from vyber_pozadia import nacitaj_pozadie
 
 
+from music_manager import start_music
+start_music()
+
+
 # Funkcia na uloženie aktívnej hry do JSON
 def save_game_config(game_name):
     # Skontroluj, či súbor existuje

@@ -3,6 +3,9 @@ import os
 import json
 import random
 
+from music_manager import start_music
+start_music()
+
 def nacitaj_pozadie(config_file, screen_width, screen_height):
     # Načítanie json súbora
     with open(config_file, "r") as f:

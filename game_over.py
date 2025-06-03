@@ -5,6 +5,9 @@ import sys
 import time
 import os
 
+from music_manager import start_music
+start_music()
+
 # Funkcia na načítanie aktívnej hry z JSON
 def load_game_config():
     try:
@@ -100,7 +103,7 @@ def draw_gradient_button(rect, color1, color2, text):
 
 # Zobrazenie úvodného textu
 draw_vertical_gradient(screen, SPACE_BLUE, PURPLE)
-welcome_text = loading_font.render("YOU LOSE", True, WHITE)
+welcome_text = loading_font.render("GAME OVER", True, WHITE)
 screen.blit(welcome_text, (
     width // 2 - welcome_text.get_width() // 2,
     height // 2 - welcome_text.get_height() // 2
