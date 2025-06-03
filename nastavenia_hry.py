@@ -103,11 +103,9 @@ control_images = [
 
     pygame.transform.scale(pygame.image.load(os.path.join(CONTROLS_FOLDER, f"ovladanie2.png")), (160, 90))
     if os.path.exists(os.path.join(CONTROLS_FOLDER, f"ovladanie2.png"))
-    else pygame.Surface((160, 90)),
-
-    pygame.transform.scale(pygame.image.load(os.path.join(CONTROLS_FOLDER, f"ovladanie4.png")), (160, 90))  # <-- tu zmena
-    if os.path.exists(os.path.join(CONTROLS_FOLDER, f"ovladanie4.png"))
     else pygame.Surface((160, 90))
+
+
 ]
 
 
@@ -116,9 +114,8 @@ map_positions = [
     (width // 2 - 540 + (i % 6) * 180, height // 2 - 240 + (i // 6) * 110) for i in range(12)
 ]
 control_positions = [
-    (width // 2 - 280, height // 2 + 120),
-    (width // 2 - 80, height // 2 + 120),
-    (width // 2 + 120, height // 2 + 120)
+    (width // 2 - 180, height // 2 + 120),
+    (width // 2 + 20, height // 2 + 120)
 ]
 
 selected_map = None
@@ -139,8 +136,7 @@ def start_game(selected_control, selected_map):
 
     script_map = {
         0: "raketka.py",
-        1: "ufo.py",
-        2: "omniman.py"
+        1: "ufo.py"
     }
     script_to_run = script_map.get(selected_control)
     if script_to_run:
