@@ -63,12 +63,6 @@ font = pygame.font.Font(font_path, 80)
 button_font = pygame.font.Font(font_path, 50)
 loading_font = pygame.font.Font(font_path, 200)
 
-# Načítanie obrázkov
-star_img = pygame.image.load("img/doplnky/star.png")
-time_img = pygame.image.load("img/doplnky/time.png")
-star_img = pygame.transform.scale(star_img, (60, 60))
-time_img = pygame.transform.scale(time_img, (60, 60))
-
 # Funkcia na gradiet pozadie
 def draw_vertical_gradient(surface, top_color, bottom_color):
     for y in range(surface.get_height()):
@@ -123,27 +117,12 @@ while running:
     best_score_ufo_text = button_font.render(f"BEST SCORE UFO: {best_score_ufo}", True, WHITE)
     screen.blit(best_score_ufo_text, (10, 70))
 
-    # SCORE + obrázok vpravo
+    # SCORE a TIME
     score_text = font.render(f"SCORE: {score}", True, WHITE)
-    score_text_rect = score_text.get_rect()
-    score_text_rect.center = (width // 2 - 50, base_y + 100)
-    screen.blit(score_text, score_text_rect)
+    screen.blit(score_text, score_text.get_rect(center=(width // 2, base_y + 100)))
 
-    star_img_scaled = pygame.transform.scale(star_img, (60, 60))
-    star_rect = star_img_scaled.get_rect()
-    star_rect.midleft = (score_text_rect.right + 2, score_text_rect.centery)
-    screen.blit(star_img_scaled, star_rect)
-
-    # TIME + obrázok vpravo
-    cas_text = font.render(f"TIME: {cas}", True, WHITE)
-    cas_text_rect = cas_text.get_rect()
-    cas_text_rect.center = (width // 2 - 50, base_y + 180)
-    screen.blit(cas_text, cas_text_rect)
-
-    time_img_scaled = pygame.transform.scale(time_img, (60, 60))
-    time_rect = time_img_scaled.get_rect()
-    time_rect.midleft = (cas_text_rect.right + 2, cas_text_rect.centery)
-    screen.blit(time_img_scaled, time_rect)
+    cas_text = font.render(f"TIME: {cas} s", True, WHITE)
+    screen.blit(cas_text, cas_text.get_rect(center=(width // 2, base_y + 180)))
 
     # Tlačidlá
     btn_width, btn_height = 300, 70
