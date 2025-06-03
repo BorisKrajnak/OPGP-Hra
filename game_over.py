@@ -5,7 +5,6 @@ import sys
 import time
 import os
 
-
 # Funkcia na načítanie aktívnej hry z JSON
 def load_game_config():
     try:
@@ -23,16 +22,6 @@ def load_score():
     except:
         return 0
 
-def nacitaj_best_score():
-    try:
-        with open("best_score_raketka.json", "r") as f:
-            data = json.load(f)
-            return data.get("best", 0)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return 0
-
-best_score = nacitaj_best_score()
-
 def load_time():
     try:
         with open("skore.json", "r") as f:
@@ -41,6 +30,22 @@ def load_time():
     except:
         return 0
 
+def nacitaj_best_score(subor):
+    try:
+        with open(subor, "r") as f:
+            data = json.load(f)
+            return data.get("best", 0)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return 0
+
+# Načítanie skóre a času
+score = load_score()
+cas = load_time()
+best_score_raketka = nacitaj_best_score("best_score_raketka.json")
+best_score_ufo = nacitaj_best_score("best_score_ufo.json")
+active_game = load_game_config()
+
+# Inicializácia pygame
 pygame.init()
 info = pygame.display.Info()
 width, height = info.current_w, info.current_h
@@ -50,10 +55,15 @@ pygame.display.set_caption("Game Over")
 # Farby
 WHITE = (255, 255, 255)
 SPACE_BLUE = (10, 10, 40)
-DARK_GRAY = (169, 169, 169)
 PURPLE = (31, 10, 30)
 
-# Funkcia na gradiet
+# Fonty
+font_path = "Font/VOYAGER.ttf"
+font = pygame.font.Font(font_path, 80)
+button_font = pygame.font.Font(font_path, 50)
+loading_font = pygame.font.Font(font_path, 200)
+
+# Funkcia na gradiet pozadie
 def draw_vertical_gradient(surface, top_color, bottom_color):
     for y in range(surface.get_height()):
         ratio = y / surface.get_height()
@@ -62,28 +72,7 @@ def draw_vertical_gradient(surface, top_color, bottom_color):
         b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
         pygame.draw.line(surface, (r, g, b), (0, y), (surface.get_width(), y))
 
-# Fonty
-font_path = "Font/VOYAGER.ttf"
-font = pygame.font.Font(font_path, 80)
-button_font = pygame.font.Font(font_path, 50)
-loading_font = pygame.font.Font(font_path, 200)
-
-# Načítanie aktívnej hry
-active_game = load_game_config()
-score = load_score()
-cas = load_time()
-
-# YOU LOSE
-draw_vertical_gradient(screen, SPACE_BLUE, PURPLE)
-welcome_text = loading_font.render("YOU LOSE", True, WHITE)
-screen.blit(welcome_text, (
-    width // 2 - welcome_text.get_width() // 2,
-    height // 2 - welcome_text.get_height() // 2
-))
-pygame.display.update()
-time.sleep(0.5)
-
-# Funkcia na gradient button
+# Funkcia na kreslenie tlačidla s prechodom
 def draw_gradient_button(rect, color1, color2, text):
     button_surf = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
     for y in range(rect.height):
@@ -100,6 +89,17 @@ def draw_gradient_button(rect, color1, color2, text):
     text_rect = text_surf.get_rect(center=rect.center)
     screen.blit(text_surf, text_rect)
 
+# Zobrazenie úvodného textu
+draw_vertical_gradient(screen, SPACE_BLUE, PURPLE)
+welcome_text = loading_font.render("YOU LOSE", True, WHITE)
+screen.blit(welcome_text, (
+    width // 2 - welcome_text.get_width() // 2,
+    height // 2 - welcome_text.get_height() // 2
+))
+pygame.display.update()
+time.sleep(0.5)
+
+# Hlavný cyklus
 running = True
 while running:
     draw_vertical_gradient(screen, SPACE_BLUE, PURPLE)
@@ -109,9 +109,15 @@ while running:
     game_over_text = font.render("GAME OVER", True, WHITE)
     screen.blit(game_over_text, game_over_text.get_rect(center=(width // 2, base_y)))
 
-    best_score_text = button_font.render(f"BEST SCORE RAKETKA: {best_score}", True, WHITE)
+    # BEST SCORE RAKETKA
+    best_score_text = button_font.render(f"BEST SCORE RAKETKA: {best_score_raketka}", True, WHITE)
     screen.blit(best_score_text, (10, 10))
 
+    # BEST SCORE UFO
+    best_score_ufo_text = button_font.render(f"BEST SCORE UFO: {best_score_ufo}", True, WHITE)
+    screen.blit(best_score_ufo_text, (10, 70))
+
+    # SCORE a TIME
     score_text = font.render(f"SCORE: {score}", True, WHITE)
     screen.blit(score_text, score_text.get_rect(center=(width // 2, base_y + 100)))
 
