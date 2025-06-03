@@ -22,12 +22,3 @@ def nacitaj_pozadie(config_file, screen_width, screen_height):
         surface = pygame.Surface((screen_width, screen_height))
         surface.fill((0, 0, 0))
         return surface
-
-def nacitaj_obrazok(image_path, center_x, center_y):
-    if os.path.exists(image_path):
-        image = pygame.image.load(image_path)
-        rect = image.get_rect()
-        rect.center = (center_x, center_y)
-        return image, rect
-    else:
-        raise FileNotFoundError(f"Nenašiel sa súbor {image_path}")
