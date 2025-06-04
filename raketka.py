@@ -207,7 +207,6 @@ def spusti_hru():
             meteory.append(meteorit)
             last_spawn_time = pygame.time.get_ticks()
 
-
         # Kreslenie scény
         rotated_frame = pygame.transform.rotate(player_frames[current_frame], rotation_angle)
         frame_rect = rotated_frame.get_rect(center=(player_x, player_y))

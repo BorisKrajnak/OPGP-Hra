@@ -78,7 +78,8 @@ star_img = pygame.transform.scale(star_img, (45, 45))
 time_img = pygame.image.load(r"img/doplnky/time.png").convert_alpha()
 time_img = pygame.transform.scale(time_img, (45, 45))
 
-font = pygame.font.SysFont(None, 45)
+font_path = "Font/VOYAGER.ttf"
+font = pygame.font.Font(font_path, 40)
 
 # --- UFO nastavenia ---
 ufo_x = width // 2
@@ -257,7 +258,7 @@ while running:
             continue
         offset = (int(barrel.x - ufo_rect.left), int(barrel.y - ufo_rect.top))
         if ufo_mask.overlap(barrel.mask, offset):
-            fuel = min(max_fuel, fuel + 30)
+            fuel = min(max_fuel, fuel + 15)
             barrels.remove(barrel)
             continue
         barrel.draw(screen)
@@ -268,11 +269,11 @@ while running:
     line_height = 55
 
     screen.blit(star_img, (hud_x, hud_y))
-    score_text = font.render(f": {current_score}", True, (255, 255, 255))
+    score_text = font.render(f"SCORE: {current_score}", True, (255, 255, 255))
     screen.blit(score_text, (hud_x + 50, hud_y + 5))
 
     screen.blit(time_img, (hud_x, hud_y + line_height))
-    time_text = font.render(f": {elapsed_time} s", True, (255, 255, 255))
+    time_text = font.render(f"TIME: {elapsed_time}s", True, (255, 255, 255))
     screen.blit(time_text, (hud_x + 50, hud_y + line_height + 5))
 
     fuel_ratio = fuel / max_fuel
