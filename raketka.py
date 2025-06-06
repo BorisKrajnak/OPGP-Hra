@@ -119,6 +119,13 @@ def spusti_hru():
     font_path = "Font/VOYAGER.ttf"
     font = pygame.font.Font(font_path, 50)
 
+    # --- HUD obrázky ---
+    star_img = pygame.image.load(r"img/doplnky/star.png").convert_alpha()
+    star_img = pygame.transform.scale(star_img, (45, 45))
+
+    time_img = pygame.image.load(r"img/doplnky/time.png").convert_alpha()
+    time_img = pygame.transform.scale(time_img, (45, 45))
+
     base_speed = 3.0
     max_speed = 12.0
     min_spawn_delay = 400
@@ -127,7 +134,7 @@ def spusti_hru():
     meteory_obehol = 0
 
     fuel = 100
-    fuel_depletion_rate = 0.05
+    fuel_depletion_rate = 0.04
     fuel_bar_position = (20, 120)
     fuel_bar_size = (300, 25)
 
@@ -152,10 +159,17 @@ def spusti_hru():
         elapsed_time = (pygame.time.get_ticks() - start_time) // 1000
         score = meteory_obehol + elapsed_time
 
+        hud_x = 10
+        hud_y = 10
+        line_height = 55
+
+        screen.blit(star_img, (hud_x, hud_y))
         score_surface = font.render(f"SCORE: {score}", True, (255, 255, 255))
+        screen.blit(score_surface, (hud_x + 50, hud_y + 5))
+
+        screen.blit(time_img, (hud_x, hud_y + line_height))
         time_surface = font.render(f"TIME: {elapsed_time}s", True, (255, 255, 255))
-        screen.blit(score_surface, (20, 20))
-        screen.blit(time_surface, (20, 70))
+        screen.blit(time_surface, (hud_x + 50, hud_y + line_height + 5))
 
         if elapsed_time % 5 == 0:
             base_speed = min(base_speed + 0.1, max_speed)
