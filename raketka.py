@@ -131,8 +131,8 @@ def spusti_hru():
 
     shield_spawn_pos = None
     shield_spawn_time = pygame.time.get_ticks()
-    shield_spawn_interval = random.randint(5000, 5000)  # 15-25 sekúnd náhodne
-    shield_duration_on_map = 5000  # 8 sekúnd, kým štít zostane na mape
+    shield_spawn_interval = random.randint(30000, 40000)
+    shield_duration_on_map = 5000  # 5 sekúnd, kým štít zostane na mape
     has_shield = False  # hráč štít nemá
     shield_active = False  # či je štít aktívny
 
@@ -161,6 +161,9 @@ def spusti_hru():
     fuel_duration = 5000
     fuel_pos = None
     fuel_size = 60
+
+    hotbar_shields = []
+    max_shields = 5
 
     fuel_image = pygame.image.load(os.path.join("img", "palivo", "fuel.png")).convert_alpha()
     fuel_image = pygame.transform.scale(fuel_image, (fuel_size, fuel_size))
@@ -195,10 +198,36 @@ def spusti_hru():
         time_surface = font.render(f"TIME: {elapsed_time}s", True, (255, 255, 255))
         screen.blit(time_surface, (hud_x + 50, hud_y + line_height + 5))
 
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_e:
+                    if len(hotbar_shields) > 0 and not shield_active:
+                        shield_active = True
+                        shield_active_start = pygame.time.get_ticks()
+                        shield_end_time = shield_active_start + shield_active_duration
+                        hotbar_shields.pop(0)  # odstránime prvý štít (spotrebovaný)
+
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+
+        hotbar_x = 20
+        hotbar_y = height - 70
+        hotbar_slot_size = 50
+        hotbar_spacing = 10
+
+        for i in range(len(hotbar_shields)):
+            slot_rect = pygame.Rect(hotbar_x + i * (hotbar_slot_size + hotbar_spacing), hotbar_y, hotbar_slot_size,
+                                    hotbar_slot_size)
+            pygame.draw.rect(screen, (50, 50, 50), slot_rect, border_radius=10)  # pozadie slotu so zaoblením
+            pygame.draw.rect(screen, (50, 50, 50), slot_rect, 1, border_radius=10)  # obrys slotu so zaoblením
+            # ikonka štítu
+            shield_icon_scaled = pygame.transform.scale(shield_image, (hotbar_slot_size - 10, hotbar_slot_size - 10))
+            screen.blit(shield_icon_scaled, (slot_rect.x + 5, slot_rect.y + 5))
+
         if shield_active:
             remaining_time = max(0, shield_end_time - pygame.time.get_ticks())
             bar_width = int((remaining_time / shield_duration) * max_bar_width)
-
             pygame.draw.rect(screen, (50, 50, 50), (bar_x, bar_y, max_bar_width, bar_height))  # pozadie
             pygame.draw.rect(screen, (0, 100, 255), (bar_x, bar_y, bar_width, bar_height))  # aktívny progress
             pygame.draw.rect(screen, (255, 255, 255), (bar_x, bar_y, max_bar_width, bar_height), 2)  # obrys
@@ -216,31 +245,14 @@ def spusti_hru():
         if shield_spawn_pos is not None and current_time - shield_spawn_time > shield_duration_on_map:
             shield_spawn_pos = None
             shield_spawn_time = current_time
-            shield_spawn_interval = random.randint(30000, 40000)
+
 
         if elapsed_time % 5 == 0:
             base_speed = min(base_speed + 0.1, max_speed)
             spawn_delay = max(spawn_delay - 10, min_spawn_delay)
             meteory_velkost_max = min(meteory_velkost_max + 1, 160)
 
-        if shield_active and pygame.time.get_ticks() > shield_end_time:
-            shield_active = False
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-
-                if event.key == pygame.K_e and has_shield and not shield_active:
-                    shield_active = True
-                    shield_active_start = pygame.time.get_ticks()
-                    shield_end_time = shield_active_start + shield_active_duration  # Nastav čas, kedy štít skončí
-                    has_shield = False  # Štít sa spotrebuje
 
         keys = pygame.key.get_pressed()
         rotation_angle = 0
@@ -287,6 +299,10 @@ def spusti_hru():
         frame_rect = rotated_frame.get_rect(center=(player_x, player_y))
         player_mask = pygame.mask.from_surface(rotated_frame)
 
+        rotated_frame = pygame.transform.rotate(player_frames[current_frame], rotation_angle)
+        frame_rect = rotated_frame.get_rect(center=(player_x, player_y))
+        player_mask = pygame.mask.from_surface(rotated_frame)
+
         # --- Fuel mechanics ---
         fuel -= fuel_depletion_rate
         fuel = max(fuel, 0)
@@ -323,13 +339,14 @@ def spusti_hru():
             shield_rect = pygame.Rect(shield_spawn_pos[0], shield_spawn_pos[1], 50, 50)
             offset_shield = (shield_rect.left - frame_rect.left, shield_rect.top - frame_rect.top)
             if player_mask.overlap(pygame.mask.from_surface(shield_image), offset_shield):
+                shield_spawn_pos = None
+                shield_spawn_time = pygame.time.get_ticks()
+                if len(hotbar_shields) < max_shields:
+                    hotbar_shields.append(True)
+            if player_mask.overlap(pygame.mask.from_surface(shield_image), offset_shield):
                 has_shield = True
                 shield_spawn_pos = None
                 shield_spawn_time = pygame.time.get_ticks()
-
-        # --- Zobraz štít v ľavom hornom rohu ak ho hráč má (a nie je aktívny) ---
-        if has_shield and not shield_active:
-            screen.blit(shield_image, (350, 50))  # napríklad pod skóre a čas
 
         # --- Ak je štít aktívny, zobraz ho okolo raketky ---
         if shield_active:

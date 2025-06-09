@@ -131,11 +131,27 @@ back_button = pygame.Rect(40, height - button_height - 40, button_width, button_
 
 # Funkcia na spustenie hry
 def start_game(selected_control, selected_map):
-    map_data = {
-        "map_image": f"pozadie_vesmir_n{selected_map + 1}.jpg"
+    config_path = "game_config.json"
+
+    config_data = {}
+    if os.path.exists(config_path):
+        with open(config_path, "r") as f:
+            try:
+                config_data = json.load(f)
+            except json.JSONDecodeError:
+                config_data = {}
+
+    config_data["map_image"] = f"pozadie_vesmir_n{selected_map + 1}.jpg"
+
+    game_names = {
+        0: "raketka",
+        1: "ufo"
     }
-    with open("game_config.json", "w") as f:
-        json.dump(map_data, f)
+
+    config_data["active_game"] = game_names.get(selected_control, "raketka")
+
+    with open(config_path, "w") as f:
+        json.dump(config_data, f, indent=2)
 
     script_map = {
         0: "raketka.py",
