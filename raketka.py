@@ -5,6 +5,7 @@ import os
 import random
 import subprocess
 import time
+from music_manager import toggle_music, set_volume, get_music_state, start_music, toggle_mute
 
 from vyber_pozadia import nacitaj_pozadie
 
@@ -116,6 +117,10 @@ def spusti_hru():
 
     start_time = pygame.time.get_ticks()
 
+    # Tlačidlo pre hudbu (v pravom hornom rohu)
+    music_button_size = 60
+    music_button_rect = pygame.Rect(width - music_button_size - 20, 20, music_button_size, music_button_size)
+
     font_path = "Font/VOYAGER.ttf"
     font = pygame.font.Font(font_path, 50)
 
@@ -199,6 +204,18 @@ def spusti_hru():
         screen.blit(time_surface, (hud_x + 50, hud_y + line_height + 5))
 
         for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if music_button_rect.collidepoint(event.pos):  # Ovládanie hudby
+                    # Pri kliknutí pravým tlačidlom - nastavenie štandardnej hlasitosti
+                    if event.button == 3:  # Pravé tlačidlo myši
+                        # Nastavenie štandardnej hlasitosti (0.5)
+                        set_volume(0.5)
+                        MUSIC_STATE = get_music_state()
+                        MUSIC_STATE["muted"] = False
+                    # Pri kliknutí ľavým tlačidlom - stlmenie/obnovenie
+                    else:
+                        toggle_mute()
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_e:
                     if len(hotbar_shields) > 0 and not shield_active:
@@ -385,6 +402,36 @@ def spusti_hru():
 
         # Kreslenie raketky
         screen.blit(rotated_frame, frame_rect.topleft)
+
+        # Vykreslenie tlačidla pre hudbu
+        music_state = get_music_state()
+        music_color = PURPLE if not music_state["muted"] else DARK_GRAY
+        pygame.draw.circle(screen, music_color, music_button_rect.center, music_button_size // 2)
+        pygame.draw.circle(screen, WHITE, music_button_rect.center, music_button_size // 2, 2)  # Obrys
+
+        # Ikona hudby v tlačidle - dve paličky
+        bar_width = 5
+        bar_height = music_button_size // 3
+        spacing = 10
+        center_x = music_button_rect.centerx
+        center_y = music_button_rect.centery
+
+        # Prvá palička
+        left_bar_x = center_x - spacing // 2 - bar_width
+        pygame.draw.rect(screen, WHITE, (left_bar_x, center_y - bar_height // 2, bar_width, bar_height))
+
+        # Druhá palička
+        right_bar_x = center_x + spacing // 2
+        pygame.draw.rect(screen, WHITE, (right_bar_x, center_y - bar_height // 2, bar_width, bar_height))
+
+        # Indikátor stlmenia - ak je stlmené, prekrížiť paličky
+        if music_state["muted"]:
+            slash_length = music_button_size // 3
+            slash_width = 3
+            # Diagonálna čiara cez ikonu
+            pygame.draw.line(screen, WHITE, 
+                            (center_x - slash_length, center_y - slash_length),
+                            (center_x + slash_length, center_y + slash_length), slash_width)
 
         # Draw fuel bar
         if fuel > 60:

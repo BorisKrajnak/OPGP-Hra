@@ -6,6 +6,7 @@ import os
 import random
 import subprocess
 import time
+from music_manager import toggle_music, set_volume, get_music_state, start_music, toggle_mute
 
 from vyber_pozadia import nacitaj_pozadie
 
@@ -52,6 +53,15 @@ info = pygame.display.Info()
 width, height = info.current_w, info.current_h
 screen = pygame.display.set_mode((width, height), pygame.DOUBLEBUF | pygame.HWSURFACE)
 pygame.display.set_caption("UFO")
+
+# Farby
+WHITE = (255, 255, 255)
+PURPLE = (31, 10, 30)
+DARK_GRAY = (50, 50, 50)
+
+# Tlačidlo pre hudbu (v pravom hornom rohu)
+music_button_size = 60
+music_button_rect = pygame.Rect(width - music_button_size - 20, 20, music_button_size, music_button_size)
 
 # --- Načítanie pozadia ---
 background = nacitaj_pozadie("game_config.json", width, height)
@@ -182,6 +192,16 @@ while running:
             running = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_w:
             ufo_speed = jump_strength
+        if event.type == pygame.MOUSEBUTTONDOWN and music_button_rect.collidepoint(event.pos):  # Ovládanie hudby
+            # Pri kliknutí pravým tlačidlom - nastavenie štandardnej hlasitosti
+            if event.button == 3:  # Pravé tlačidlo myši
+                # Nastavenie štandardnej hlasitosti (0.5)
+                set_volume(0.5)
+                MUSIC_STATE = get_music_state()
+                MUSIC_STATE["muted"] = False
+            # Pri kliknutí ľavým tlačidlom - stlmenie/obnovenie
+            else:
+                toggle_mute()
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a]:
@@ -223,6 +243,36 @@ while running:
     screen.blit(current_ufo_image, (ufo_x, ufo_y))
     ufo_rect = current_ufo_image.get_rect(topleft=(ufo_x, ufo_y))
     ufo_mask = pygame.mask.from_surface(current_ufo_image)
+
+    # Vykreslenie tlačidla pre hudbu
+    music_state = get_music_state()
+    music_color = PURPLE if not music_state["muted"] else DARK_GRAY
+    pygame.draw.circle(screen, music_color, music_button_rect.center, music_button_size // 2)
+    pygame.draw.circle(screen, WHITE, music_button_rect.center, music_button_size // 2, 2)  # Obrys
+
+    # Ikona hudby v tlačidle - dve paličky
+    bar_width = 5
+    bar_height = music_button_size // 3
+    spacing = 10
+    center_x = music_button_rect.centerx
+    center_y = music_button_rect.centery
+
+    # Prvá palička
+    left_bar_x = center_x - spacing // 2 - bar_width
+    pygame.draw.rect(screen, WHITE, (left_bar_x, center_y - bar_height // 2, bar_width, bar_height))
+
+    # Druhá palička
+    right_bar_x = center_x + spacing // 2
+    pygame.draw.rect(screen, WHITE, (right_bar_x, center_y - bar_height // 2, bar_width, bar_height))
+
+    # Indikátor stlmenia - ak je stlmené, prekrížiť paličky
+    if music_state["muted"]:
+        slash_length = music_button_size // 3
+        slash_width = 3
+        # Diagonálna čiara cez ikonu
+        pygame.draw.line(screen, WHITE, 
+                        (center_x - slash_length, center_y - slash_length),
+                        (center_x + slash_length, center_y + slash_length), slash_width)
 
     # --- Spawn meteorov podľa obtiažnosti ---
     speed_multiplier = 1.0 + (elapsed_time // 30) * 0.2
