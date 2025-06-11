@@ -57,6 +57,11 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Raketka")
 clock = pygame.time.Clock()
 
+# Farby
+WHITE = (255, 255, 255)
+PURPLE = (31, 10, 30)
+DARK_GRAY = (50, 50, 50)
+
 # Načítanie pozadia
 background = nacitaj_pozadie("game_config.json", width, height)
 
