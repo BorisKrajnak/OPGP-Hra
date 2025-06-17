@@ -158,8 +158,8 @@ while running:
     # Tlačidlá
     btn_width, btn_height = 300, 70
     restart_button = pygame.Rect(width // 2 - 150, height // 2, btn_width, btn_height)
-    settings_button = pygame.Rect(width // 2 - 150, height // 2 + 200, btn_width, btn_height)
-    quit_button = pygame.Rect(width // 2 - 150, height // 2 + 100, btn_width, btn_height)
+    settings_button = pygame.Rect(width // 2 - 150, height // 2 + 100, btn_width, btn_height)
+    quit_button = pygame.Rect(width // 2 - 150, height // 2 + 200, btn_width, btn_height)
 
     draw_gradient_button(restart_button, SPACE_BLUE, PURPLE, "RESTART")
     draw_gradient_button(settings_button, SPACE_BLUE, PURPLE, "SETTINGS")

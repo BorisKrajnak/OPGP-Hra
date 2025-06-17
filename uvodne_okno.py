@@ -133,7 +133,7 @@ def draw_rules_popup():
         "V ceste ti budú stáť prekážky, nepriatelia a vesmírne pasce.",
         "Zbieraj body, palivo a power-upy pre lepšiu šancu na prežitie.",
         "Hra končí, keď narazíš, stratíš životy alebo palivo.",
-        "Niektoré power-upy sú dočasné – využi ich múdro.",
+        'Niektoré power-upy sú dočasné = využi ich múdro – aktivuj ich stlačením "E"',
         "Ovládanie: WASD alebo gamepad (ak je pripojený) :D :D :D"
     ]
 

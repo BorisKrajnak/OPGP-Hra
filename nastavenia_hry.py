@@ -57,7 +57,7 @@ def draw_gradient_button(surface, rect, color1, color2, text, font, text_color):
     surface.blit(button_surf, (rect.x, rect.y))
 
     # BIELY OBRYS (border)
-    pygame.draw.rect(surface, WHITE, rect, width=3, border_radius=7)
+    pygame.draw.rect(surface, WHITE, rect, width=   3, border_radius=7)
 
     # Text v strede
     text_surf = font.render(text, True, text_color)
