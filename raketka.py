@@ -156,7 +156,7 @@ def spusti_hru():
     bar_height = 25
 
     base_speed = 3.0
-    max_speed = 12.0
+    max_speed = 20.0
     min_spawn_delay = 400
     meteory_velkost_min = 40
     meteory_velkost_max = 100
@@ -270,7 +270,7 @@ def spusti_hru():
 
 
         if elapsed_time % 5 == 0:
-            base_speed = min(base_speed + 0.1, max_speed)
+            base_speed = min(base_speed + 0.2, max_speed)
             spawn_delay = max(spawn_delay - 10, min_spawn_delay)
             meteory_velkost_max = min(meteory_velkost_max + 1, 160)
 
